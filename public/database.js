@@ -1,29 +1,26 @@
-import { MongoClient, ServerApiVersion} from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from "dotenv";
 
-const password = "rukie607";
-const userName = "ruqaiyah731";
-const server = "cluster0.hp71o.mongodb.net";
+dotenv.config();
 
-const encodedUsername = encodeURIComponent(userName);
-const encodedPassword =  encodeURIComponent(password);
+const connectURI = process.env.MONGODB_URI;
 
-const connectURI = `mongodb+srv://${encodedUsername}:${encodedPassword}@${server}/?retryWrites=true&w=majority`;
-console.log(connectURI);
+if (!connectURI) {
+  throw new Error("MONGODB_URI is missing. Create a .env file using .env.example.");
+}
 
-
-const client = new MongoClient( connectURI, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: false,
-        deprecationErrors: true,
-    }
+const client = new MongoClient(connectURI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: false,
+    deprecationErrors: true,
+  },
 });
 
+const database = client.db("Social_NetworkingCoursework");
 
-const database =  client.db("Social_NetworkingCoursework");
 const collection = database.collection("users");
-const postsCollection = database.collection("posts")
+const postsCollection = database.collection("posts");
 const notificationsCollection = database.collection("notifications");
 
-export {collection, postsCollection, notificationsCollection};
-
+export { collection, postsCollection, notificationsCollection };
